@@ -54,10 +54,10 @@ class pos(list):
         a=pos(a)
         print('#2',a,self)
         while(a):
-            try:
+#             try:
                 res=table[a]
                 break
-            except:
+#             except:
                 a=a[:-1]
         if a:
             return a
@@ -83,9 +83,10 @@ class Table(list):
         return str(self.t)
     def __getitem__(self, key):
         t=list(self.t)
+        print("QAQ",t,key)
         for i in key.p:
             t=t[i]
-#             print("$",t)
+#             print("$" ,t)
         if isinstance(t,list):
             pass
         return t
@@ -121,13 +122,14 @@ def Move(di):
     tne=i_pos.tne(di)
     print('o',tne,i_pos,i_pos.tne(di),'o')
     ne_tne=ne.tne(di)
-    print("#Move",i_pos,ne,tne,ne_tne)
+#     print("#Move",i_pos,ne,tne,ne_tne)
     if table[ne]==0:
         table[ne]=-1#move()
         table[i_pos]=0
         i_pos=ne
     elif len(ne)==len(i_pos):
         if table[ne]!=2:
+            print("#Move",i_pos,ne,tne,ne_tne)
             if table[ne_tne]==0:
                 table[ne_tne]=table[ne]#push()
                 table[ne]=-1
@@ -196,6 +198,57 @@ def register_event():
 
 
 
+table=Table(TABLE)
+i_pos=pos([0,0])
+t=i_pos.tne(3)
+print("@",t,i_pos,table[i_pos],table)
+
+tt.screensize(canvwidth=800, canvheight=600, bg=None)
+tt.setup(width=0.4,height=0.6)
+tt.delay(delay=None)
+
+tt.speed(0)
+tt.pensize(1)
+tt.pencolor("black")
+
+tt.tracer(False)
+draw()
+tt.tracer(True)
+register_event()
+
+# while(1):
+#     if flag:
+#         Move(di)
+#         flag=False
+#         tt.tracer(False)
+#         draw()
+#         tt.tracer(True)
+#     else:
+#         pass
+
+
+
+#tt.goto(tt.pos()+(60,-60))
+# tt.penup()
+# tt.goto(-150,-120)
+# tt.pensize(5)
+# tt.pencolor("yellow")
+# tt.fillcolor("red")  
+# tt.begin_fill()
+# for _ in range(5):
+#   tt.fd(150)
+#   tt.left(144)
+# tt.end_fill()
+tt.mainloop()
+
+'''
+while(flag):
+    catch key
+    Move
+    checkend
+    v_pos
+    
+'''
 table=Table(TABLE)
 i_pos=pos([0,0])
 t=i_pos.tne(3)
