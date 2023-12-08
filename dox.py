@@ -6,15 +6,18 @@ import time
 '''
 n=3
 d0=300;x0=y0=-0.5*d0
-Dic={-1:'i',0:'blank',1:'box',2:'block'}
-cDic={-1:'red',0:'white',1:'yellow',2:'black'}
+Dic={-1:'i',0:'blank',1:'box',2:'block',-2:'i_end',-3:'box_end'}
+cDic={-1:'red',0:'white',1:'yellow',2:'black',-2:'red',-3:'yellow'}
 dic={'r':1,'l':-1,'u':-n,'d':n}
 di=dic['r']
-flag=False
+flag=False;flag1=0
 TABLE=[[-1,0,0,
         0,1,0,
         [0,0,[0,0,0,1,1,1,2,2,2],0,0,0,2,2,2],0,2],2]
-TABLE1=[[[2,2,2,0,-1,0,0,0,0],[2,0,0,0,2,0,0,2,0],2,
+TABLE1=[[[2,2,2,0,-1,0,0,0,0],[2,-2,-3,0,2,0,0,2,0],2,
+        [0,[2,2,2,0,0,2,2,0,2],0,0,0,0,2,2,2],[0,2,0,0,0,0,2,2,0],2,
+        2,2,2],2]
+TABLE2=[[[2,2,2,0,-1,0,0,0,0],[2,-2,-3,0,2,0,0,2,0],2,
         [0,[2,2,2,0,0,2,2,0,2],0,0,0,0,2,2,2],[0,2,0,0,0,0,2,2,0],2,
         2,2,2],2]
 
@@ -134,7 +137,13 @@ def draw(p=pos([0]),d=0):
         tt.goto(temp+((r)*x,(c)*x))#tt.goto((r-1)*x,(c-1)*x)
         tt.pendown()
         color=cDic[table[p]]
-        drawf(color,x)
+        if isinstance(ctable[p],int)and ctable[p]<=-2 and table[p]!=-1:
+            drawf(cDic[ctable[p]],x,ctable[p])
+            global flag1
+            if flag1<3:#...
+                table[p]=0;flag1+=1
+        else:
+            drawf(color,x)
     elif isinstance(table[p][0],list) or len(table[p])>1:
         temp=tt.pos()
         for i in range(9):
@@ -146,12 +155,31 @@ def draw(p=pos([0]),d=0):
         tt.penup()
         tt.goto(temp)
 def drawf(color="white",x=d0,pattern=0):
-    tt.fillcolor(color)
-    tt.begin_fill()
-    for _ in range(4):
-      tt.forward(x)
-      tt.right(-90)
-    tt.end_fill()
+    if pattern==0:
+        tt.fillcolor(color)
+        tt.begin_fill()
+        for _ in range(4):
+          tt.forward(x)
+          tt.right(-90)
+        tt.end_fill()
+    elif pattern<=-2:
+        tt.fillcolor("white")
+        tt.begin_fill()
+        for _ in range(4):
+          tt.forward(x)
+          tt.right(-90)
+        tt.end_fill()
+        tt.pencolor(color)
+        temp=tt.pos()
+        tt.penup()
+        tt.goto(temp+(0.25*x,0.25*x))
+        tt.pendown()
+        for _ in range(4):
+          tt.forward(x/2)
+          tt.right(-90)
+        tt.penup()
+        tt.goto(temp)
+        tt.pencolor('black')
 
 def dir_r():
     global di
@@ -181,6 +209,7 @@ def register_event():
 
 
 table=Table(TABLE1)
+ctable=Table(TABLE2)
 i_pos=pos([0,0,4])
 print("@",table)
 
